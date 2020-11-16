@@ -1,5 +1,5 @@
-
-config = require('./config/config');
+const mongoose = require('mongoose');
+const config = require('./config/config');
 
 
 const express = require('express')
@@ -10,47 +10,15 @@ const bodyParser = require('body-parser');
  app.use(bodyParser.urlencoded ({extendend: false}));
 
 
-app.get('/usuario', (req, res) =>{
-
-	res.json('get usuario')	
-})
-
-app.post('/usuario', (req, res) =>{
-
-	let body = req.body;
-
-	if (body.nombre.edad === undefined) {
-		res.status(400).json({
-			ok: false,
-			mensaje: 'el nombre es necesario'
-
-		})
-	}else{
-		
-
-	res.json({
-		pesona: body
-	})	
-	}
-	
-})
-
-app.put('/usuario/:id', (req, res) =>{
-
-	let id = req.params.id;
-
-	res.json({
-		id
-	})	
-})
-
-app.delete('/usuario', (req, res) =>{
-
-	res.json('delete usuario')	
-})
+app.use( require('./rutas/usuarios') );
 
 
 
+mongoose.connect('mongodb://localhost:27017/cafe', (err, rep) =>{
+	if (err) throw err;
+
+	console.log('base de datos ONLINE');
+});
 
 app.listen(process.env.PORT, () =>{
 	console.log(`es cuchando puerto`, process.env.PORT);
